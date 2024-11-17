@@ -1,0 +1,38 @@
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv()) # read local .env file
+
+import x
+import generate as g
+
+doc_tree = x.get_document_tree('ATPL Ground Training Series - Book 8 Human Performance and Limitations.docx')
+for main_node in doc_tree:
+    print(main_node)
+
+chapter2 = doc_tree[1].get_jsonstring()
+print(chapter2)
+print()
+print()
+
+ch2_dict = doc_tree[1].get_names_tree_dict()
+print(ch2_dict)
+print()
+print()
+
+level3_names = []
+for level3 in ch2_dict['Subitems']:
+    name = level3['Name']
+    name = name.strip()
+    if name == 'Questions' or name == 'Answers': continue
+    level3_names.append(name)
+
+print(level3_names)
+print()
+print()
+
+# for level3item in doc_tree[1]['Subitems']:
+
+blood_circulation = doc_tree[1].contents[2]
+blood_circulation_json_string = blood_circulation.get_jsonstring()
+
+response = g.generate_MCQ_json(blood_circulation_json_string)
+print(response)
