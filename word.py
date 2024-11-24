@@ -1,18 +1,20 @@
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv()) # read local .env file
 
-import x
+import read_doc
 import generate as g
 
-doc_tree = x.get_document_tree('ATPL Ground Training Series - Book 8 Human Performance and Limitations.docx')
+doc_tree = read_doc.get_document_tree('ATPL Ground Training Series - Book 8 Human Performance and Limitations.docx')
 for main_node in doc_tree:
     print(main_node)
 
+print('chapter 2 json string')
 chapter2 = doc_tree[1].get_jsonstring()
 print(chapter2)
 print()
 print()
 
+print('chapter 2 dictionary')
 ch2_dict = doc_tree[1].get_names_tree_dict()
 print(ch2_dict)
 print()
