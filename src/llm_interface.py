@@ -13,7 +13,7 @@ embedding = AzureOpenAIEmbeddings(
 )
 
 llm = ChatOpenAI(
-    model="gpt-4o",
+    model="gpt-4o-mini",
     api_key=os.getenv('OPENAI_API_KEY')
 )
 
@@ -52,6 +52,9 @@ def __generate_keywords_to_fetch_documents(mcq_question: str, correct_answer: st
 
 def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_seeking_explanation: str = None) -> tuple[str,list[dict]]:
     """Performs RAG and gets the explanation of why an MCQ option is incorrect or correct, with sources.
+
+    Returns:
+        tuple[str,list[dict]]: explanation, sources
     """
     keywords = __generate_keywords_to_fetch_documents(mcq_question, correct_answer, answer_seeking_explanation)
     context_docs = retriever.invoke(keywords)
@@ -61,7 +64,7 @@ def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_
     ```{mcq_question}```
     The correct answer is '{correct_answer}'.
 
-    Use the following pieces of retrieved context to explain why 
+    Use ONLY the following pieces of retrieved context to explain why 
     """
 
     if (not answer_seeking_explanation) or (answer_seeking_explanation == correct_answer):
@@ -75,7 +78,7 @@ def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_
 
     prompt_string += task
     prompt_string += """If you don't know the answer, say that you don't know.
-    You don't need to mention the fact that you used the context in your answer.
+    You don't need to mention the fact that you used the context in your answer. Keep your answer as short as possible.
     """
     prompt_string += """Context:"""
 
