@@ -1,0 +1,4 @@
+# should be in ~/.streamlit/config.toml
+
+# disable telemetry
+gatherUsageStats = false
