@@ -1,4 +1,4 @@
-# SCRIPT
+# Streamlit Main Page
 # Runs the streamlit web app to present to end user
 # streamlit run /Users/rehangagamage/Desktop/ATPL/"Test Yourself".py
 
@@ -20,6 +20,7 @@ def clear_current_mcq():
 
 if st.button('Random MCQ'): clear_current_mcq()
 
+# If there is no currently selected MCQ, pick a random one, else get the currently selected one.
 if 'current_mcq' not in st.session_state:
     mcq = random.choice(mcqs)
     st.session_state.current_mcq = mcq

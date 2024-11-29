@@ -12,7 +12,7 @@ def chat_with_data(query: str) -> tuple[str,list[dict]]:
         tuple[str,list[dict]]: answer, sources
     """
     llm = Connectors.get_llm_client()
-    structured_llm = llm.with_structured_output(ResultWithSourcesUsed)
+    structured_llm = llm.with_structured_output(ResultWithSourcesUsed) # This setup means that llm returns the answer with useless sources dropped from the top k context documents.
     vectorstore = Connectors.get_vectorstore_client()
     retriever = vectorstore.as_retriever()
 
@@ -33,10 +33,11 @@ def chat_with_data(query: str) -> tuple[str,list[dict]]:
         prompt_string += f"{i + 1}. {doc.page_content}\n"
     
 
-    result = structured_llm.invoke(prompt_string)
+    result: ResultWithSourcesUsed = structured_llm.invoke(prompt_string)
     print(result)
     sources = []
 
+    # only get the sources that were useful for generating the answer
     for n in result.context_pieces_used:
         index = n-1
         document = context_docs[index]

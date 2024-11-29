@@ -1,3 +1,7 @@
+# Streamlit secondary page
+# Allows user to chat with the textbook.
+# https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps
+
 import streamlit as st
 
 from src import chat_with_data
@@ -9,7 +13,6 @@ st.set_page_config(
 st.title("Chat with your Textbook 📘")
 st.sidebar.header('Chat with your Textbook 📘')
 
-# https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps
 
 if "messages" not in st.session_state:
     st.session_state.messages = []

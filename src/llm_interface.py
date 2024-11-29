@@ -37,7 +37,7 @@ def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_
     """
     vectorstore = Connectors.get_vectorstore_client()
     retriever = vectorstore.as_retriever()
-    structured_llm = Connectors.get_llm_client().with_structured_output(ResultWithSourcesUsed)
+    structured_llm = Connectors.get_llm_client().with_structured_output(ResultWithSourcesUsed) # This setup means that llm returns the answer with useless sources dropped from the top k context documents.
 
     keywords = __generate_keywords_to_fetch_documents(mcq_question, correct_answer, answer_seeking_explanation)
     
@@ -70,9 +70,10 @@ def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_
         prompt_string += f"{i + 1}. {doc.page_content}\n"
 
     sources: list[dict] = []
-    result = structured_llm.invoke(prompt_string)
+    result: ResultWithSourcesUsed = structured_llm.invoke(prompt_string)
     print(result)
 
+    # only get the sources that were useful for generating the answer
     for n in result.context_pieces_used:
         index = n-1
         document = context_docs[index]
