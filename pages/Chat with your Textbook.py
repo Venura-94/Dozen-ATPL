@@ -23,7 +23,10 @@ def typewriter(text: str):
 
 
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = [] # list[dict]
+# for conversational memory (will store messages except sources)
+if "messages_for_memory" not in st.session_state:
+    st.session_state.messages_for_memory = [] # list[dict]
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
@@ -38,13 +41,18 @@ if prompt := st.chat_input("Enter question..."): # := operator to assign the use
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-
-    response_string, sources = chat_with_data.chat_with_data(prompt)
+    response_string, sources = chat_with_data.chat_with_data(prompt,st.session_state.messages_for_memory)
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         st.write_stream(typewriter(response_string))
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response_string})
+
+    # for conversational memory
+    st.session_state.messages_for_memory.append({"role": "user", "content": prompt})
+    st.session_state.messages_for_memory.append({"role": "assistant", "content": response_string})
+    st.session_state.messages_for_memory = st.session_state.messages_for_memory[-4:] # cap memory
+
     sources_string = 'Sources:  \n  \n'
     for source in sources:
         sources_string += f"Chapter {source['chapter']} -> {source['subchapter']}" + '  \n' # streamlit requires 2 whitespaces in front of the new line for it to work

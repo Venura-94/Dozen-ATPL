@@ -2,11 +2,12 @@ from src.connectors import Connectors
 from src.ResultWithSourcesUsed import ResultWithSourcesUsed
 
 
-def chat_with_data(query: str) -> tuple[str,list[dict]]:
+def chat_with_data(query: str, conv_history: list[dict] = None) -> tuple[str,list[dict]]:
     """Performs chat with data.
 
     Args:
         query (str): User query
+        conv_history (list[dict], optional): conversation history (role: user/assistant, content). Defaults to None.
 
     Returns:
         tuple[str,list[dict]]: answer, sources
@@ -20,7 +21,7 @@ def chat_with_data(query: str) -> tuple[str,list[dict]]:
 
     prompt_string = f"""
     You are an assistant for question-answering tasks. 
-    Use ONLY the following pieces of retrieved context to answer
+    Use ONLY the following pieces of retrieved context and provided conversation history to answer
     the question. If you don't know the answer, say that you don't know. 
     Keep the answer concise. The retrieved pieces of context are numbered.
     Question:
@@ -31,9 +32,20 @@ def chat_with_data(query: str) -> tuple[str,list[dict]]:
 
     for i,doc in enumerate(context_docs):
         prompt_string += f"{i + 1}. {doc.page_content}\n"
-    
+
+    if conv_history:
+        prompt_string += "Conversation History: \n"
+        for conv in conv_history:
+            role = conv["role"]
+            if role == 'assistant': role = 'You'
+            content = conv["content"]
+            prompt_string += f"{role}: {content} \n\n"
+    else: prompt_string += "Conversation History: None provided.\n"
 
     result: ResultWithSourcesUsed = structured_llm.invoke(prompt_string)
+    print('Context docs:')
+    for doc in context_docs:
+        print(doc.page_content);print()
     print(result)
     sources = []
 
@@ -44,6 +56,4 @@ def chat_with_data(query: str) -> tuple[str,list[dict]]:
         sources.append(document.metadata)
 
     return (result.answer,sources)
-
-
 
