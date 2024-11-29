@@ -23,7 +23,7 @@ class Connectors:
                 azure_endpoint = os.getenv('AZURE_OPENAI_EMBEDDINGS_ENDPOINT'),
                 api_version= os.getenv('AZURE_OPENAI_EMBEDDINGS_API_VERSION')
             )
-        return cls.__mcqs
+        return cls.__embeddings_client
     
     @classmethod
     def get_llm_client(cls):

@@ -11,6 +11,7 @@ st.set_page_config(
     page_icon="✍️",
 )
 st.title('Test Yourself ✍️')
+st.sidebar.header('Test Yourself ✍️')
 
 mcqs = MCQS_Holder.get_processed_MCQs()
 
