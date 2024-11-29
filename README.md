@@ -7,7 +7,7 @@
 #### Main Programs (in execution order)
 - create_vs.py - Reads the word document (python-docx) and ingests knowledge (Chapter 2 - 17 inclusive, ignores questions and answers), and creates vectorstore.
 - prepare_mcqs.py - Reads the 293 questions from the documents, get the answers from the .csv file, gets explanations and sources for them, and stores as a .pkl file in the extracted_data folder.
-- present_mcqs.py - Runs the streamlit web app to present to end user
+- "Test Yourself".py - Runs the streamlit web app to present to end user
 
 #### Prerequisites
 ATPL PDF must be converted to a word document using Word 365 (requires internet connection).

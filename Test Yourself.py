@@ -1,14 +1,16 @@
 # SCRIPT
 # Runs the streamlit web app to present to end user
-# streamlit run /Users/rehangagamage/Desktop/ATPL/present_ui.py
+# streamlit run /Users/rehangagamage/Desktop/ATPL/"Test Yourself".py
 
-import pickle
 import random
 import streamlit as st
-from src.MCQ import MCQ
 from extracted_data.mcqs_holder import MCQS_Holder
 
-st.sidebar.markdown('# Test Yourself')
+st.set_page_config(
+    page_title="Test Yourself",
+    page_icon="✍️",
+)
+st.title('Test Yourself ✍️')
 
 mcqs = MCQS_Holder.get_processed_MCQs()
 
