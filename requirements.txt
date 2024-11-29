@@ -7,4 +7,4 @@ langchain-community
 chromadb
 streamlit
 watchdog
-# pydantic
+pydantic
