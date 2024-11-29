@@ -1,6 +1,6 @@
 # SCRIPT
 # Runs the streamlit web app to present to end user
-# streamlit run /Users/rehangagamage/Desktop/ATPL/present_mcqs.py
+# streamlit run /Users/rehangagamage/Desktop/ATPL/present_ui.py
 
 import pickle
 import random
@@ -8,6 +8,7 @@ import streamlit as st
 from src.MCQ import MCQ
 from extracted_data.mcqs_holder import MCQS_Holder
 
+st.sidebar.markdown('# Test Yourself')
 
 mcqs = MCQS_Holder.get_processed_MCQs()
 

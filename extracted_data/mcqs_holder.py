@@ -18,6 +18,7 @@ class MCQS_Holder:
             with open('extracted_data/mcqs.pkl','rb') as file:
                 cls.__mcqs: list[MCQ] = pickle.load(file)
             for i,mcq in enumerate(cls.__mcqs):
-                if len(mcq.possible_answers) != 4: cls.__mcqs.remove(mcq)
-                print(f'Removed MCQ {i+1}')
+                if len(mcq.possible_answers) != 4: 
+                    cls.__mcqs.remove(mcq)
+                    print(f'Removed MCQ {i+1}')
         return cls.__mcqs
