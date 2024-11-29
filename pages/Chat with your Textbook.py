@@ -37,6 +37,7 @@ for message in st.session_state.messages:
 
 # React to user input
 if prompt := st.chat_input("Enter question..."): # := operator to assign the user's input to the prompt variable and checked if it's not None in the same line.
+    prompt = prompt[:700] # cap length of user query
     # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)

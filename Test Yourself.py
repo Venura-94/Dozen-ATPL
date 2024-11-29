@@ -15,6 +15,17 @@ st.sidebar.header('Test Yourself ✍️')
 
 mcqs = MCQS_Holder.get_processed_MCQs()
 
+st.markdown(
+    """
+    <style>
+    .stButton > button {
+        text-align: left; /* Align text inside button to the left */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 def clear_current_mcq():
     st.session_state.pop('current_mcq')
 
