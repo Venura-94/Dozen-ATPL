@@ -42,11 +42,12 @@ def chat_with_data(query: str, conv_history: list[dict] = None) -> tuple[str,lis
             prompt_string += f"{role}: {content} \n\n"
     else: prompt_string += "Conversation History: None provided.\n"
 
+    print('PROMPT STRING:')
+    print(prompt_string)
+    print()
+    print()
+
     result: ResultWithSourcesUsed = structured_llm.invoke(prompt_string)
-    print('Context docs:')
-    for doc in context_docs:
-        print(doc.page_content);print()
-    print(result)
     sources = []
 
     # only get the sources that were useful for generating the answer

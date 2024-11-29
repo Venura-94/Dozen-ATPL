@@ -8,11 +8,13 @@ import time
 from src import chat_with_data
 
 st.set_page_config(
-    page_title="Chat with your Textbook",
+    page_title="Chat with your Textbook (Beta)",
     page_icon="📘",
 )
 st.title("Chat with your Textbook 📘")
 st.sidebar.header('Chat with your Textbook 📘')
+
+memory_on = st.toggle("Memory of Conversation History")
 
 def typewriter(text: str):
     """To create typewriter effect in the chat UI
@@ -40,8 +42,9 @@ if prompt := st.chat_input("Enter question..."): # := operator to assign the use
         st.markdown(prompt)
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-
-    response_string, sources = chat_with_data.chat_with_data(prompt,st.session_state.messages_for_memory)
+    print(f'memory_on: {memory_on}')
+    if memory_on: response_string, sources = chat_with_data.chat_with_data(prompt,st.session_state.messages_for_memory)
+    else: response_string, sources = chat_with_data.chat_with_data(prompt)
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         st.write_stream(typewriter(response_string))
