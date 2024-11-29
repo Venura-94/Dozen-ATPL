@@ -1,27 +1,4 @@
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv()) # read local .env file
-
-import os
-
-from langchain_openai import AzureOpenAIEmbeddings, ChatOpenAI
-from langchain_chroma import Chroma 
-
-embedding = AzureOpenAIEmbeddings(
-    model='text-embedding-3-large',
-    azure_endpoint = os.getenv('AZURE_OPENAI_EMBEDDINGS_ENDPOINT'),
-    api_version= os.getenv('AZURE_OPENAI_EMBEDDINGS_API_VERSION')
-)
-
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    api_key=os.getenv('OPENAI_API_KEY')
-)
-
-vectorstore = Chroma(
-    embedding_function=embedding,
-    persist_directory='vectorstore/'
-)
-retriever = vectorstore.as_retriever()
+from src.connectors import Connectors
 
 def __generate_keywords_to_fetch_documents(mcq_question: str, correct_answer: str, answer_seeking_explanation: str = None) -> str:
     prompt_string = f"""
@@ -46,6 +23,7 @@ def __generate_keywords_to_fetch_documents(mcq_question: str, correct_answer: st
     Reply only with the keywords as a string. Don't tell me anything else.
     """
 
+    llm = Connectors.get_llm_client()
     keywords = llm.invoke(prompt_string).content
     print(f'KEYWORDS: {keywords}')
     return keywords
@@ -56,7 +34,12 @@ def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_
     Returns:
         tuple[str,list[dict]]: explanation, sources
     """
+    vectorstore = Connectors.get_vectorstore_client()
+    retriever = vectorstore.as_retriever()
+    llm = Connectors.get_llm_client()
+
     keywords = __generate_keywords_to_fetch_documents(mcq_question, correct_answer, answer_seeking_explanation)
+    
     context_docs = retriever.invoke(keywords)
 
     prompt_string = f"""
