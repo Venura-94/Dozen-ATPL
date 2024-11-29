@@ -1,4 +1,5 @@
 from src.connectors import Connectors
+from src.ResultWithSourcesUsed import ResultWithSourcesUsed
 
 def __generate_keywords_to_fetch_documents(mcq_question: str, correct_answer: str, answer_seeking_explanation: str = None) -> str:
     prompt_string = f"""
@@ -36,7 +37,7 @@ def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_
     """
     vectorstore = Connectors.get_vectorstore_client()
     retriever = vectorstore.as_retriever()
-    llm = Connectors.get_llm_client()
+    structured_llm = Connectors.get_llm_client().with_structured_output(ResultWithSourcesUsed)
 
     keywords = __generate_keywords_to_fetch_documents(mcq_question, correct_answer, answer_seeking_explanation)
     
@@ -62,14 +63,19 @@ def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_
     prompt_string += task
     prompt_string += """If you don't know the answer, say that you don't know.
     You don't need to mention the fact that you used the context in your answer. Keep your answer as short as possible.
+    The retrieved pieces of context are numbered.
     """
-    prompt_string += """Context:"""
+    prompt_string += 'CONTEXT:  \n'
+    for i,doc in enumerate(context_docs):
+        prompt_string += f"{i + 1}. {doc.page_content}\n"
 
     sources: list[dict] = []
-    for doc in context_docs:
-        sources.append(doc.metadata)
-        prompt_string += doc.page_content
+    result = structured_llm.invoke(prompt_string)
+    print(result)
 
-    explanation = llm.invoke(prompt_string).content
+    for n in result.context_pieces_used:
+        index = n-1
+        document = context_docs[index]
+        sources.append(document.metadata)
 
-    return (explanation, sources)
+    return (result.answer, sources)
