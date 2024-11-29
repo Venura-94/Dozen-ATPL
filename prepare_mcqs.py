@@ -7,9 +7,6 @@ import pickle
 from data_extraction import extract_mcqs
 
 mcqs = extract_mcqs.extract_mcqs()
-q93 = mcqs[92]
-q147 = mcqs[146]
-mcqs = [q93,q147]
 extract_mcqs.update_MCQs_with_explanations(mcqs)
 
 for i in range(0,len(mcqs)):

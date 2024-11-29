@@ -76,5 +76,7 @@ def extract_mcqs() -> list[MCQ]:
 def update_MCQs_with_explanations(mcqs: list[MCQ]):
     """Adds the LLM explanations and sources to the given MCQ objects.
     """
-    for mcq in mcqs:
-        mcq.generate_llm_explanations_and_sources()
+    for i,mcq in enumerate(mcqs):
+        print(f'MCQ {i+1}')
+        try: mcq.generate_llm_explanations_and_sources()
+        except IndexError: continue
