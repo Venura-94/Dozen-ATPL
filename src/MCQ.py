@@ -36,3 +36,16 @@ class MCQ:
         for m,srcs in enumerate(self.sources):
             string += f'{chr(m+97)}. ' + srcs.__str__() + '\n\n'
         return string
+    
+    def get_answer_index(self, answer: str) -> int:
+        """Enter a string to see if it matches that in the possible answer list.
+
+        Args:
+            answer (str): _description_
+
+        Returns:
+            int: index of the answer, None if not found
+        """
+        for i,ans in enumerate(self.possible_answers):
+            if answer == ans: return i
+        return None
