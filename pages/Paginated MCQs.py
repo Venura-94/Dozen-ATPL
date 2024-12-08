@@ -1,6 +1,5 @@
-# Streamlit Main Page
-# Runs the streamlit web app to present to end user
-# streamlit run /Users/rehangagamage/Desktop/ATPL/"Test Yourself".py
+# Streamlit secondary page
+# Paginated MCQs.
 
 import streamlit as st
 import math
