@@ -17,7 +17,7 @@ embedding = AzureOpenAIEmbeddings(
 from langchain.schema.document import Document
 from data_extraction import read_doc
 
-doc_tree = read_doc.get_document_tree('data/"ATPL Ground Training Series - Book 8 Human Performance and Limitations.docx"')
+doc_tree = read_doc.get_document_tree(os.path.join("data","ATPL Ground Training Series - Book 8 Human Performance and Limitations MCQ CORRECTED.docx"))
 doc_tree = doc_tree[:-2] # ignore chapters 18 - specimen questions, and onwards
 # doc_tree = doc_tree[1:3]
 
