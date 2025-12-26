@@ -54,7 +54,8 @@ def check_answer(index):
     sources_string = ''
     for source in sources:
         sources_string += f"Chapter {source['chapter']} -> {source['subchapter']}" + '  \n' # streamlit requires 2 whitespaces in front of the new line for it to work
-    st.warning(sources_string)
+    with st.popover(f"**Chapter {source['chapter']} -> {source['subchapter']}**"):
+            st.markdown(source['markdown'])
 
 # Present MCQ on screen
 ## Display options as buttons

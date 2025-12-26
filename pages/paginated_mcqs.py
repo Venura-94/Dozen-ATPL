@@ -70,7 +70,8 @@ def check_answer(index: int, column, mcq: MCQ):
     sources_string = ''
     for source in sources:
         sources_string += f"Chapter {source['chapter']} -> {source['subchapter']}" + '  \n' # streamlit requires 2 whitespaces in front of the new line for it to work
-    column.warning(sources_string)
+        with column.popover(f"**Chapter {source['chapter']} -> {source['subchapter']}**"):
+            st.markdown(source['markdown'])
 
 def radio_callback(mcq_id):
     """Used to update session state with user progress once they click an MCQ answer.
