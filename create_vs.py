@@ -25,17 +25,32 @@ for chapter in doc_tree:
         chunk = Document(
             page_content=f'Chapter: {chapter.name}, Sub-chapter: {heading3.name}, '
         )
+        markdown = f"# {chapter.name}\n"
+        markdown += f"## {heading3.name}\n"
+        leaves = heading3.get_leaves()
+        current_heading4 = ''
+        for leaf in leaves:
+            text = ''
+            if leaf.parent.level == 'Heading 4' and leaf.parent.name != current_heading4:
+                current_heading4 = leaf.parent.name
+                if current_heading4 != '':
+                    text += f'\n\n### {leaf.parent.name}: \n'
+                else: 
+                    text += '\n\n'
+            elif leaf.parent.level == 'Heading 4' and leaf.parent.name == current_heading4:
+                pass
+            else:
+                current_heading4 = ''
+                text += '\n\n'
+
+            text += leaf.name + '\n'
+            chunk.page_content += text
+            markdown += text
         chunk.metadata = {
             'chapter': chapter.name,
-            'subchapter': heading3.name
+            'subchapter': heading3.name,
+            'markdown': markdown
         }
-        leaves = heading3.get_leaves()
-        for leaf in leaves:
-            text = leaf.name
-            if leaf.parent.level == 'Heading 4':
-                text = f'{leaf.parent.name}: ' + text
-            text += '\n'
-            chunk.page_content += text
         chunks.append(chunk)
 
 for chunk in chunks:
