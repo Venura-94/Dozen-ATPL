@@ -4,18 +4,15 @@
 
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv()) # read local .env file
+
 import os
+
 from langchain.vectorstores import Chroma 
-
-from langchain_openai import AzureOpenAIEmbeddings
-embedding = AzureOpenAIEmbeddings(
-    model='text-embedding-3-large',
-    azure_endpoint = os.getenv('AZURE_OPENAI_EMBEDDINGS_ENDPOINT'),
-    api_version= os.getenv('AZURE_OPENAI_EMBEDDINGS_API_VERSION')
-)
-
 from langchain.schema.document import Document
+
 from data_extraction import read_doc
+from src.connectors import Connectors
+
 
 doc_tree = read_doc.get_document_tree(os.path.join("data","ATPL Ground Training Series - Book 8 Human Performance and Limitations MCQ CORRECTED.docx"))
 doc_tree = doc_tree[:-2] # ignore chapters 18 - specimen questions, and onwards
@@ -50,7 +47,7 @@ for chunk in chunks:
 
 vectordb = Chroma.from_documents(
     documents=chunks,
-    embedding=embedding,
+    embedding=Connectors.get_embeddings_client(),
     persist_directory='vectorstore/'
 )
 print(vectordb._collection.count())

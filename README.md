@@ -1,8 +1,5 @@
 #### Environmental Variables
-- OPENAI_API_KEY - for generation
-- AZURE_OPENAI_EMBEDDINGS_ENDPOINT - for embeddings
-- AZURE_OPENAI_API_KEY - for embeddings
-- AZURE_OPENAI_EMBEDDINGS_API_VERSION - for embeddings
+- OPENAI_API_KEY
 
 #### Main Programs (in execution order)
 - create_vs.py - Reads the word document (python-docx) and ingests knowledge (Chapter 2 - 17 inclusive, ignores questions and answers), and creates vectorstore.

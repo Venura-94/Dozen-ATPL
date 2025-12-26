@@ -3,7 +3,7 @@ load_dotenv(find_dotenv()) # read local .env file
 
 import os
 
-from langchain_openai import AzureOpenAIEmbeddings, ChatOpenAI
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_chroma import Chroma 
 
 class Connectors:
@@ -15,13 +15,12 @@ class Connectors:
     __vectorstore_client = None
 
     @classmethod
-    def get_embeddings_client(cls):
+    def get_embeddings_client(cls) -> OpenAIEmbeddings:
         if cls.__embeddings_client == None:
             print('Creating embeddings client')
-            cls.__embeddings_client = AzureOpenAIEmbeddings(
+            cls.__embeddings_client = OpenAIEmbeddings(
                 model='text-embedding-3-large',
-                azure_endpoint = os.getenv('AZURE_OPENAI_EMBEDDINGS_ENDPOINT'),
-                api_version= os.getenv('AZURE_OPENAI_EMBEDDINGS_API_VERSION')
+                api_key=os.getenv('OPENAI_API_KEY')
             )
         return cls.__embeddings_client
     
@@ -30,7 +29,7 @@ class Connectors:
         if cls.__llm_client == None:
             print('Creating llm client')
             cls.__llm_client = ChatOpenAI(
-                model="gpt-4o-mini",
+                model="gpt-5.1",
                 api_key=os.getenv('OPENAI_API_KEY')
             )
         return cls.__llm_client
