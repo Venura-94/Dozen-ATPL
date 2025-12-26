@@ -9,7 +9,6 @@ from src import chat_with_data
 
 
 st.title("Chat with your Textbook 📘")
-st.sidebar.header('Chat with your Textbook 📘')
 
 memory_on = st.toggle("Memory of Conversation History")
 

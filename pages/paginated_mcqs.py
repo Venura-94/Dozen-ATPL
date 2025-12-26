@@ -11,7 +11,6 @@ MCQS_PER_PAGE = 10
 
 
 st.title('Paginated MCQs ✍️')
-st.sidebar.header('Paginated MCQs ✍️')
 
 # Get mcqs
 all_mcqs = MCQS_Holder.get_processed_MCQs()

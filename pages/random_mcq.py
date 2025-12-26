@@ -8,7 +8,6 @@ from extracted_data.mcqs_holder import MCQS_Holder
 
 
 st.title('Random MCQ ✍️')
-st.sidebar.header('Random MCQ ✍️')
 
 # Get mcqs
 mcqs = MCQS_Holder.get_processed_MCQs()
