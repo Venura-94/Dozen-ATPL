@@ -6,11 +6,7 @@ import random
 import streamlit as st
 from extracted_data.mcqs_holder import MCQS_Holder
 
-# Set page title and sidebar
-st.set_page_config(
-    page_title="Random MCQ",
-    page_icon="✍️",
-)
+
 st.title('Random MCQ ✍️')
 st.sidebar.header('Random MCQ ✍️')
 

@@ -7,10 +7,7 @@ import time
 
 from src import chat_with_data
 
-st.set_page_config(
-    page_title="Chat with your Textbook (Beta)",
-    page_icon="📘",
-)
+
 st.title("Chat with your Textbook 📘")
 st.sidebar.header('Chat with your Textbook 📘')
 

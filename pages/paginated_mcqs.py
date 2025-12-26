@@ -9,11 +9,7 @@ from src.MCQ import MCQ
 
 MCQS_PER_PAGE = 10
 
-# Set page title and sidebar
-st.set_page_config(
-    page_title="Paginated MCQs",
-    page_icon="✍️",
-)
+
 st.title('Paginated MCQs ✍️')
 st.sidebar.header('Paginated MCQs ✍️')
 
