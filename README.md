@@ -8,6 +8,7 @@
     > [!WARNING]
     > Delete existing `vectorstore` directory when running this.
 - prepare_mcqs.py - Reads the 293 questions from the documents, get the answers from the .csv file, gets explanations and sources for them, and stores as a .pkl file in the extracted_data folder.
+    - Took more than 1.5 hours with the current code to generate these answers and cost 5.79$.
 - streamlit_app.py - Runs the streamlit web app to present to end user
     ```bash
     streamlit run streamlit_app.py

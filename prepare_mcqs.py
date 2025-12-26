@@ -3,11 +3,17 @@
 # gets explanations and sources for them, and stores as a .pkl file in the extracted_data folder.
 
 import pickle
+import time
 
 from data_extraction import extract_mcqs
 
+
+tic = time.time()
+
 mcqs = extract_mcqs.extract_mcqs()
 extract_mcqs.update_MCQs_with_explanations(mcqs)
+
+toc = time.time()
 
 for i in range(0,len(mcqs)):
     mcq = mcqs[i]
@@ -19,9 +25,7 @@ for i in range(0,len(mcqs)):
 with open('extracted_data/mcqs.pkl','wb') as file:
     pickle.dump(mcqs, file)
 
-
-
-
+print(f"Took {toc - tic} seconds.")
 
 
 # import src.llm_interface as li
