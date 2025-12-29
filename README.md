@@ -5,8 +5,8 @@
 > [!NOTE]
 > The first 2 programs will create and save their artifacts to disk, so you don't need to run them repeatedly (saving time and OpenAI costs).
 - create_vs.py - Reads the word document (python-docx) and ingests knowledge (Chapter 2 - 17 inclusive, ignores questions and answers), and creates vectorstore.
-    > [!WARNING]
-    > Delete existing `vectorstore` directory when running this.
+> [!WARNING]
+> Delete existing `vectorstore` directory when running this.
 - prepare_mcqs.py - Reads the 293 questions from the documents, get the answers from the .csv file, gets explanations and sources for them, and stores as a .pkl file in the extracted_data folder.
     - Took more than 1.5 hours with the current code to generate these answers and cost 5.79$.
 - streamlit_app.py - Runs the streamlit web app to present to end user
