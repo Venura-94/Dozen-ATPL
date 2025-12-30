@@ -1,4 +1,3 @@
-from src.connectors_old import Connectors
 from src.models.result_with_sources_used import ResultWithSourcesUsed
 from src.connectors.llm import LLM
 from src.connectors.vectorstore import ChromaLocal
