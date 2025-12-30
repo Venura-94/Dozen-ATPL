@@ -1,4 +1,4 @@
-from src.connectors import Connectors
+from src.connectors_old import Connectors
 from src.ResultWithSourcesUsed import ResultWithSourcesUsed
 
 

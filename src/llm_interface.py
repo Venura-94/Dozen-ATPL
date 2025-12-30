@@ -1,4 +1,4 @@
-from src.connectors import Connectors
+from src.connectors_old import Connectors
 from src.ResultWithSourcesUsed import ResultWithSourcesUsed
 
 def __generate_keywords_to_fetch_documents(mcq_question: str, correct_answer: str, answer_seeking_explanation: str = None) -> str:

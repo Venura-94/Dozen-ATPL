@@ -15,7 +15,7 @@ print()
 print()
 
 print('chapter 2 dictionary')
-ch2_dict = doc_tree[1].get_names_tree_dict()
+ch2_dict = doc_tree[1].get_table_of_contents()
 print(ch2_dict)
 print()
 print()
@@ -33,7 +33,7 @@ print()
 
 # for level3item in doc_tree[1]['Subitems']:
 
-blood_circulation = doc_tree[1].contents[2]
+blood_circulation = doc_tree[1].child_blocks[2]
 blood_circulation_json_string = blood_circulation.get_jsonstring()
 
 response = g.generate_MCQ_json(blood_circulation_json_string)

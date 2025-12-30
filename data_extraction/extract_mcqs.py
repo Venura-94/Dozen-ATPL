@@ -1,7 +1,7 @@
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv()) # read local .env file
 
-import data_extraction.read_doc as read_doc
+from src.operators.read_word_doc import get_document_tree
 from src.MCQ import MCQ
 from src import llm_interface as li
 
@@ -14,13 +14,13 @@ def extract_mcqs() -> list[MCQ]:
     Returns:
         list[MCQ]: _description_
     """
-    doc_tree = read_doc.get_document_tree('data/ATPL Ground Training Series - Book 8 Human Performance and Limitations MCQ CORRECTED.docx', ignore_QnA=False)
+    doc_tree = get_document_tree('data/ATPL Ground Training Series - Book 8 Human Performance and Limitations MCQ CORRECTED.docx', ignore_QnA=False)
     ch18 = doc_tree[17]
 
     # identify the "Revision Questions" part of chapter 18, which contains 293 MCQs
     heading4_items = ch18.get_leaves('Heading 4')
     for item in heading4_items:
-        if item.name == 'Revision Questions':
+        if item.text_content == 'Revision Questions':
             questions = item
 
     # extract each MCQ from the 'Revision Questions' section
@@ -30,9 +30,9 @@ def extract_mcqs() -> list[MCQ]:
     numbered_list_thats_part_of_the_question_index = 1
     current_level0_list_numId = -1
     mcq_id = 1
-    for line in questions.contents:
-        if line.list == None: continue
-        if line.list[0] == 0: # New MCQ question
+    for line in questions.child_blocks:
+        if line.list_positioning == None: continue
+        if line.list_positioning[0] == 0: # New MCQ question
             # commit the previous MCQ
             if current_question != '': 
                 mcq = MCQ(current_question, current_answers, -1, id=str(mcq_id))
@@ -40,14 +40,14 @@ def extract_mcqs() -> list[MCQ]:
                 mcq_id += 1
 
             current_answers = []
-            current_question = line.name
+            current_question = line.text_content
             numbered_list_thats_part_of_the_question_index = 1
-            current_level0_list_numId = line.list[1]
-        if line.list[0] == 1 and line.list[1] != current_level0_list_numId: # numbered list that's part of the question
-            current_question += '\n' + str(numbered_list_thats_part_of_the_question_index) + '. ' + line.name # a numbered list that's part of the question
+            current_level0_list_numId = line.list_positioning[1]
+        if line.list_positioning[0] == 1 and line.list_positioning[1] != current_level0_list_numId: # numbered list that's part of the question
+            current_question += '\n' + str(numbered_list_thats_part_of_the_question_index) + '. ' + line.text_content # a numbered list that's part of the question
             numbered_list_thats_part_of_the_question_index += 1
-        if line.list[0] == 1 and line.list[1] == current_level0_list_numId: # answer list
-            current_answers.append(line.name)
+        if line.list_positioning[0] == 1 and line.list_positioning[1] == current_level0_list_numId: # answer list
+            current_answers.append(line.text_content)
     if current_question != '': 
         mcq = MCQ(current_question, current_answers, -1, id=str(mcq_id))
         mcqs.append(mcq)
