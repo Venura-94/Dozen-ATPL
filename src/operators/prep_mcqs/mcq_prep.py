@@ -1,9 +1,7 @@
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv()) # read local .env file
-
 from src.operators.read_word_doc import get_document_tree
-from src.MCQ import MCQ
-from src import llm_interface as li
+from src.models.mcq import MCQ
+from src.operators.prep_mcqs.llm_helper import generate_llm_explanations_and_sources
+
 
 def extract_mcqs() -> list[MCQ]:
     """Reads the corrected word document and QnA mapping excel to extract the 293 MCQs from the Revision Questions
@@ -35,7 +33,7 @@ def extract_mcqs() -> list[MCQ]:
         if line.list_positioning[0] == 0: # New MCQ question
             # commit the previous MCQ
             if current_question != '': 
-                mcq = MCQ(current_question, current_answers, -1, id=str(mcq_id))
+                mcq = MCQ(str(mcq_id), current_question, current_answers)
                 mcqs.append(mcq)
                 mcq_id += 1
 
@@ -49,7 +47,7 @@ def extract_mcqs() -> list[MCQ]:
         if line.list_positioning[0] == 1 and line.list_positioning[1] == current_level0_list_numId: # answer list
             current_answers.append(line.text_content)
     if current_question != '': 
-        mcq = MCQ(current_question, current_answers, -1, id=str(mcq_id))
+        mcq = MCQ(str(mcq_id), current_question, current_answers)
         mcqs.append(mcq)
         mcq_id += 1
 
@@ -62,15 +60,6 @@ def extract_mcqs() -> list[MCQ]:
         correct_ans_index = ord(correct_ans_letter) - 97
         mcqs[i].correct_answer_index = correct_ans_index
 
-
-    # print(len(mcqs))
-    # for i in range(0,len(mcqs)):
-    #     mcq = mcqs[i]
-    #     print(i+1)
-    #     print(mcq)
-    #     print()
-    #     print()
-
     return mcqs
 
 def update_MCQs_with_explanations(mcqs: list[MCQ]):
@@ -78,5 +67,5 @@ def update_MCQs_with_explanations(mcqs: list[MCQ]):
     """
     for i,mcq in enumerate(mcqs):
         print(f'MCQ {i+1}')
-        try: mcq.generate_llm_explanations_and_sources()
+        try: generate_llm_explanations_and_sources(mcq)
         except IndexError: continue

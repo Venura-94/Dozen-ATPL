@@ -1,4 +1,8 @@
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+
 import streamlit as st
+
 
 # Define the pages
 page_1 = st.Page("streamlit_pages/chat_with_textbook.py", title="Chat with your Textbook (Beta)", icon="📘")

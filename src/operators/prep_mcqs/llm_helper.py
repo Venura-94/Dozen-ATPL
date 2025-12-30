@@ -1,5 +1,11 @@
-from src.connectors_old import Connectors
+from src.connectors.llm import LLM
 from src.models.result_with_sources_used import ResultWithSourcesUsed
+from src.models.chunk import Chunk
+from src.models.mcq import MCQ
+from src.connectors.embeddings import Embeddings
+from src.connectors.vectorstore import ChromaLocal
+from src import config
+
 
 def __generate_keywords_to_fetch_documents(mcq_question: str, correct_answer: str, answer_seeking_explanation: str = None) -> str:
     prompt_string = f"""
@@ -24,25 +30,28 @@ def __generate_keywords_to_fetch_documents(mcq_question: str, correct_answer: st
     Reply only with the keywords as a string. Don't tell me anything else.
     """
 
-    llm = Connectors.get_llm_client()
-    keywords = llm.invoke(prompt_string).content
+    llm = LLM.get_openai_client()
+    response = llm.responses.create(
+        input=prompt_string,
+        model=config.LLM_MODEL
+    )
+    keywords = response.output_text
     print(f'KEYWORDS: {keywords}')
     return keywords
 
-def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_seeking_explanation: str = None) -> tuple[str,list[dict]]:
+
+def __get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_seeking_explanation: str = None) -> tuple[str,list[Chunk]]:
     """Performs RAG and gets the explanation of why an MCQ option is incorrect or correct, with sources.
 
     Returns:
         tuple[str,list[dict]]: explanation, sources
     """
-    vectorstore = Connectors.get_vectorstore_client()
-    retriever = vectorstore.as_retriever()
-    structured_llm = Connectors.get_llm_client().with_structured_output(ResultWithSourcesUsed) # This setup means that llm returns the answer with useless sources dropped from the top k context documents.
 
     keywords = __generate_keywords_to_fetch_documents(mcq_question, correct_answer, answer_seeking_explanation)
-    
-    context_docs = retriever.invoke(keywords)
 
+    query_embedding = Embeddings.embed_texts([keywords])[0]
+    context = ChromaLocal.query_collection("book8", query_embedding)
+    
     prompt_string = f"""
     Consider the MCQ Question denoted between triple backticks.
     ```{mcq_question}```
@@ -66,17 +75,35 @@ def get_explanation_with_sources(mcq_question: str, correct_answer: str, answer_
     The retrieved pieces of context are numbered.
     """
     prompt_string += 'CONTEXT:  \n'
-    for i,doc in enumerate(context_docs):
-        prompt_string += f"{i + 1}. {doc.page_content}\n"
+    for i, chunk in enumerate(context):
+        prompt_string += f"{i + 1}. {chunk.markdown}\n"
 
     sources: list[dict] = []
-    result: ResultWithSourcesUsed = structured_llm.invoke(prompt_string)
+    llm_client = LLM.get_openai_client()
+    response = llm_client.responses.parse(
+        model=config.LLM_MODEL,
+        input=prompt_string,
+        text_format=ResultWithSourcesUsed,
+    )
+    result = response.output_parsed
     print(result)
 
     # only get the sources that were useful for generating the answer
     for n in result.context_pieces_used:
         index = n-1
-        document = context_docs[index]
-        sources.append(document.metadata)
+        chunk = context[index]
+        sources.append(chunk)
 
     return (result.answer, sources)
+
+def generate_llm_explanations_and_sources(mcq: MCQ):
+    mcq.explanations = []; mcq.sources = []
+
+    for possible_answer in mcq.possible_answers:
+        explanation, sources = __get_explanation_with_sources(
+            mcq_question=mcq.question,
+            correct_answer=mcq.possible_answers[mcq.correct_answer_index],
+            answer_seeking_explanation=possible_answer
+        )
+        mcq.explanations.append(explanation)
+        mcq.sources.append(sources)

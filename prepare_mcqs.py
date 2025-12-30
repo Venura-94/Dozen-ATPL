@@ -1,43 +1,39 @@
 # SCRIPT
 # Reads the 293 questions from the documents, get the answers from the .csv file, 
 # gets explanations and sources for them, and stores as a .pkl file in the extracted_data folder.
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
-import pickle
+import json
 import time
+import io
+from dataclasses import asdict
 
-from data_extraction import extract_mcqs
+from src.operators.prep_mcqs.mcq_prep import update_MCQs_with_explanations
+from src.connectors.storage import LocalStorage
+from src.models.mcq import MCQ
 
 
+# Read the extracted MCQs from storage
+mcq_json_bytes = LocalStorage.download_file("mcqs-as-extracted/book8.json")
+mcq_json_dicts = json.loads(mcq_json_bytes.decode("utf-8"))
+mcqs: list[MCQ] = []
+for dict_ in mcq_json_dicts:
+    mcqs.append(MCQ(**dict_))
+
+# Use an LLM to generate explanations and stuff
 tic = time.time()
-
-mcqs = extract_mcqs.extract_mcqs()
-extract_mcqs.update_MCQs_with_explanations(mcqs)
-
+update_MCQs_with_explanations(mcqs)
 toc = time.time()
 
-for i in range(0,len(mcqs)):
-    mcq = mcqs[i]
-    print(i+1)
-    print(mcq)
-    print()
-    print()
+# save the MCQs with explanations to storage
+mcqs_as_dicts: list[dict] = []
+for mcq in mcqs:
+    mcqs_as_dicts.append(asdict(mcq))
 
-with open('extracted_data/mcqs.pkl','wb') as file:
-    pickle.dump(mcqs, file)
+buffer = io.BytesIO()
+buffer.write(json.dumps(mcqs_as_dicts, indent=2).encode("utf-8"))
+
+LocalStorage.upload_file("mcqs-with-explanations/book8.json", buffer.getvalue())
 
 print(f"Took {toc - tic} seconds.")
-
-
-# import src.llm_interface as li
-
-# ans,sources = li.get_explanation_with_sources(
-#     mcq_question='An individual who has consumed a moderate amount of alcohol prior to sleep is likely to have:',
-#     correct_answer='less REM sleep',
-#     answer_seeking_explanation='a longer sleep'
-# )
-
-# print('ANSWER:')
-# print(ans)
-# print('SOURCES:')
-# for source in sources:
-#     print(source)

@@ -4,13 +4,13 @@
 
 import random
 import streamlit as st
-from extracted_data.mcqs_holder import MCQS_Holder
+from src.operators.mcq_holder import MCQ_Holder
 
 
 st.title('Random MCQ 🎲')
 
 # Get mcqs
-mcqs = MCQS_Holder.get_processed_MCQs()
+mcqs = MCQ_Holder.get_processed_MCQs("mcqs-with-explanations/book8.json")
 
 # Hack to left-align buttons
 st.markdown(

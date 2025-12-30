@@ -4,8 +4,8 @@
 import streamlit as st
 import math
 
-from extracted_data.mcqs_holder import MCQS_Holder
-from src.MCQ import MCQ
+from src.operators.mcq_holder import MCQ_Holder
+from src.models.mcq import MCQ
 
 MCQS_PER_PAGE = 10
 
@@ -13,7 +13,7 @@ MCQS_PER_PAGE = 10
 st.title('Paginated MCQs 📋')
 
 # Get mcqs
-all_mcqs = MCQS_Holder.get_processed_MCQs()
+all_mcqs = MCQ_Holder.get_processed_MCQs("mcqs-with-explanations/book8.json")
 
 # Initialize session state if required
 if 'page_number' not in st.session_state:
