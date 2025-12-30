@@ -1,5 +1,5 @@
 from src.connectors_old import Connectors
-from src.ResultWithSourcesUsed import ResultWithSourcesUsed
+from src.models.result_with_sources_used import ResultWithSourcesUsed
 
 def __generate_keywords_to_fetch_documents(mcq_question: str, correct_answer: str, answer_seeking_explanation: str = None) -> str:
     prompt_string = f"""
