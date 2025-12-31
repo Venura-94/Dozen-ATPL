@@ -6,6 +6,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv()) # read local .env file
 
 import os
+import json
 
 from src.operators.read_word_doc import get_document_tree
 from src.operators.document_tree_to_chunks import document_tree_to_chunks
@@ -20,6 +21,14 @@ BOOK_NAME = "book8"
 
 blocks = get_document_tree(FILEPATH)
 blocks = blocks[:-2] # ignore chapters 18 - specimen questions, and onwards
+
+# write the textbook tree to a json file for visualization
+os.makedirs("textbook_tree/", exist_ok=True)
+blocks_as_dicts: list[dict] = []
+for block in blocks:
+    blocks_as_dicts.append(block.as_dict())
+with open(f"textbook_tree/{BOOK_NAME}_tree.json", "wt") as f:
+    json.dump(blocks_as_dicts, f, indent=2)
 
 chunks = document_tree_to_chunks(tree=blocks, book_name=BOOK_NAME)
 
