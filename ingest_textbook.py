@@ -7,6 +7,7 @@ load_dotenv(find_dotenv()) # read local .env file
 
 import os
 import json
+from dataclasses import asdict
 
 from src.operators.read_word_doc import get_document_tree
 from src.operators.document_tree_to_chunks import document_tree_to_chunks
@@ -31,6 +32,14 @@ with open(f"textbook_tree/{BOOK_NAME}_tree.json", "wt") as f:
     json.dump(blocks_as_dicts, f, indent=2)
 
 chunks = document_tree_to_chunks(tree=blocks, book_name=BOOK_NAME)
+
+# write the textbook chunks to a json file for visualization
+os.makedirs("textbook_chunks/", exist_ok=True)
+chunks_as_dicts: list[dict] = []
+for chunk in chunks:
+    chunks_as_dicts.append(asdict(chunk))
+with open(f"textbook_chunks/{BOOK_NAME}_chunks.json", "wt") as f:
+    json.dump(chunks_as_dicts, f, indent=2)
 
 # embed the chunks
 texts = []
