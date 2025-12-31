@@ -14,12 +14,16 @@ from src.connectors.storage import LocalStorage
 from src.models.mcq import MCQ
 
 
+BOOK_NAME = "book8"
+
 # Read the extracted MCQs from storage
-mcq_json_bytes = LocalStorage.download_file("mcqs-as-extracted/book8.json")
+mcq_json_bytes = LocalStorage.download_file(f"mcqs-as-extracted/{BOOK_NAME}.json")
 mcq_json_dicts = json.loads(mcq_json_bytes.decode("utf-8"))
 mcqs: list[MCQ] = []
 for dict_ in mcq_json_dicts:
     mcqs.append(MCQ(**dict_))
+
+# mcqs = mcqs[:3] # remove after testing
 
 # Use an LLM to generate explanations and stuff
 tic = time.time()
@@ -34,6 +38,6 @@ for mcq in mcqs:
 buffer = io.BytesIO()
 buffer.write(json.dumps(mcqs_as_dicts, indent=2).encode("utf-8"))
 
-LocalStorage.upload_file("mcqs-with-explanations/book8.json", buffer.getvalue())
+LocalStorage.upload_file(f"mcqs-with-explanations/{BOOK_NAME}.json", buffer.getvalue())
 
 print(f"Took {toc - tic} seconds.")
