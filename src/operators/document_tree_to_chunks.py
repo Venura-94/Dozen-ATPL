@@ -17,6 +17,7 @@ def document_tree_to_chunks(tree: list[MSWordTextBlock], book_name: str) -> list
         list[Document]: list of chunks (as langchain documents)
     """
     chunks: list[Chunk] = []
+    was_previous_block_list = False
 
     for chapter in tree:
         for subchapter in chapter.child_blocks:
@@ -36,7 +37,15 @@ def document_tree_to_chunks(tree: list[MSWordTextBlock], book_name: str) -> list
                     current_heading4 = ''
                     markdown += '\n\n'
                 
-                markdown += leaf.text_content + '\n'
+                if isinstance(leaf.list_positioning, tuple): # if it's a ms word list, add markdown bullet points
+                    markdown += "- " + leaf.text_content + '\n'
+                    was_previous_block_list = True
+                else:
+                    if was_previous_block_list:
+                        was_previous_block_list = False
+                        markdown += "\n" + leaf.text_content + '\n'
+                    else:
+                        markdown += leaf.text_content + '\n'
 
             chunks.append(Chunk(
                 chapter=chapter.text_content,
