@@ -6,13 +6,14 @@ from src.connectors.storage import LocalStorage
 
 class MCQ_Holder:
     """Singleton class to hold the processed MCQs, to avoid reading it from disk all the time.
+    (because streamlit will keep refreshing the entire script each time something needs to change in the web ui)
     """
 
     __mcqs: list[MCQ] = None
 
     @classmethod
     def get_processed_MCQs(cls, filepath: str) -> list[MCQ]:
-        """Returns the processed MCQs from the singleton holder (to avoid reading from disk all the time).
+        """Returns the processed MCQs (MCQs with LLM generated explanations) from the singleton holder.
         Discards MCQs that don't have 4 answers.
         """
         if cls.__mcqs == None:

@@ -1,6 +1,6 @@
-# SCRIPT
-# Reads the 293 questions from the documents, get the answers from the .csv file, 
-# gets explanations and sources for them, and stores as a .pkl file in the extracted_data folder.
+# Script to read extracted MCQs from the storage solution, have an LLM generate explanations for them
+# and then save them back to the storage solution for use by our app
+
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 

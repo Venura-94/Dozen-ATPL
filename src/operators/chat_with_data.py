@@ -7,6 +7,16 @@ from src import config
 
 
 def __formulate_instruction(context: list[Chunk], user_query: str) -> str:
+    """Prepares the prompt to the LLM to answer the user's question.
+
+    Args:
+        context (list[Chunk]): retrieved context from vectorstore
+        user_query (str): user's question
+
+    Returns:
+        str: prompt
+    """
+
     instruction = f"""
     You are an assistant for question-answering tasks. 
     Use ONLY the following pieces of retrieved context and provided conversation history to answer
@@ -25,6 +35,21 @@ def __formulate_instruction(context: list[Chunk], user_query: str) -> str:
 
 
 def chat_with_data(query: str, conv_history: list[dict] = None) -> tuple[str,list[Chunk]]:
+    """RAG to answer the user's question.
+
+    e.g.: Conversation History:
+    [
+        {"role": "user", "content": "knock knock."},
+        {"role": "assistant", "content": "Who's there?"},
+    ]
+
+    Args:
+        query (str): user's question
+        conv_history (list[dict], optional): conversation history. See docstring explanation for the format. Do not include the current user question in the conversation history. Defaults to None.
+
+    Returns:
+        tuple[str,list[Chunk]]: answer, sources
+    """
     
     # perform retrieval from the vectorstore
     query_embedding = Embeddings.embed_texts([query])[0]

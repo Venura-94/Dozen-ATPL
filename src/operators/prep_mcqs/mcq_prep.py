@@ -7,8 +7,6 @@ def extract_mcqs(docx_filepath: str, mcq_answers_csv_filepath: str) -> list[MCQ]
     """Reads the corrected word document and QnA mapping excel to extract the 293 MCQs from the Revision Questions
     from chapter 18. 
 
-    WARNING: Discard MCQs where answers have not been extracted (len(self.possible_answers) != 4)
-
     Returns:
         list[MCQ]: _description_
     """

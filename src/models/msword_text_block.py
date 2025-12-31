@@ -47,6 +47,14 @@ class MSWordTextBlock:
         return string
     
     def as_dict(self, exclude_parent_block = True) -> dict[str, Any]:
+        """_summary_
+
+        Args:
+            exclude_parent_block (bool, optional): Whether not to include the parent_block attribute. Including it will make the dictionary larger. Defaults to True.
+
+        Returns:
+            dict[str, Any]: _description_
+        """
         child_block_dicts = []
         for block in self.child_blocks:
             child_block_dicts.append(block.as_dict())

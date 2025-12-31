@@ -14,7 +14,7 @@ def document_tree_to_chunks(tree: list[MSWordTextBlock], book_name: str) -> list
         tree (list[MSWordTextBlock]): _description_
 
     Returns:
-        list[Document]: list of chunks (as langchain documents)
+        list[Chunk]: list of chunks
     """
     chunks: list[Chunk] = []
     was_previous_block_list = False

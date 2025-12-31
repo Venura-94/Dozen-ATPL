@@ -7,6 +7,7 @@ from src.models.chunk import Chunk
 class MCQ:
 
     id: str
+    """An ID for the MCQ. e.g. it can be the MCQ question number."""
 
     question: str
 
@@ -15,8 +16,10 @@ class MCQ:
     correct_answer_index: int | None = None
 
     explanations: list[str] | None = None
+    """Explanation for each possible answer explaning why it is wrong or right."""
 
     sources: list[list[Chunk]] | None = None
+    """Corresponding sources for each explanation."""
 
     def get_answer_index(self, answer: str) -> int:
         """Enter a string to see if it matches one in the possible answer list.

@@ -54,9 +54,20 @@ class ChromaLocal:
             documents=documents,
             metadatas=metadatas,
         )
+        print(f"Collection {name} has {collection.count()} items.")
 
     @classmethod
     def query_collection(cls, collection_name: str, embedding: list[float], top_k = 4) -> list[Chunk]:
+        """Query a vector collection
+
+        Args:
+            collection_name (str): Name of the vector collection
+            embedding (list[float]): The single vector embedding you want to search the collection by.
+            top_k (int, optional): How many top results to return. Defaults to 4.
+
+        Returns:
+            list[Chunk]: Top k most similar chunks to the embedding you searched by.
+        """
         collection = cls.__chroma_client.get_collection(collection_name)
         query_result = collection.query(query_embeddings=embedding, n_results=top_k)
 

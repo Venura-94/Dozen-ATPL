@@ -1,3 +1,6 @@
+# Script to read textbook-end MCQs (need to provide word document and csv mapping MCQ no. to correct ans)
+# and store them in the storage solution.
+
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 

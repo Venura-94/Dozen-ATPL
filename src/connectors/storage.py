@@ -9,6 +9,17 @@ class LocalStorage:
 
     @classmethod
     def list_files(cls) -> list[str]:
+        """View all files in the storage system.
+
+        e.g. : [
+          'a.txt',
+          'fol1/b.txt',
+          'fol2/c.txt'
+        ]
+
+        Returns:
+            list[str]: Avalable files (filepaths)
+        """
 
         outputs: list[str] = []
         root = Path(cls.MAIN_FOLDERPATH)        
@@ -22,7 +33,16 @@ class LocalStorage:
     
     @classmethod
     def upload_file(cls, filepath: str, file_contents: bytes, can_overwrite = True):
-        # TODO: in docstring mention use of hyphen filepaths in case of azure stoareg, Raise
+        """Upload a file to the storage system.
+
+        Args:
+            filepath (str): Filepath. Use alphanumeric characters and hyphens ('-') only, in case of use with cloud storage systems like Azure storage.
+            file_contents (bytes): _description_
+            can_overwrite (bool, optional): _description_. Defaults to True.
+
+        Raises:
+            FileExistsError: if file already exists (if can_overwrite = False)
+        """
         final_filepath = os.path.join(cls.MAIN_FOLDERPATH, filepath)
         if not can_overwrite and os.path.exists(final_filepath):
             raise FileExistsError
@@ -33,7 +53,17 @@ class LocalStorage:
 
     @classmethod
     def download_file(cls, filepath: str) -> bytes:
-        # TODO: in docstring mention raises FileNotFoundError
+        """Download a file from the storage system.
+
+        Args:
+            filepath (str): _description_
+
+        Raises:
+            FileNotFoundError: if filepath does not exist
+
+        Returns:
+            bytes: The file.
+        """
         final_filepath = os.path.join(cls.MAIN_FOLDERPATH, filepath)
         with open(final_filepath, "rb") as f:
             file_contents = f.read()
