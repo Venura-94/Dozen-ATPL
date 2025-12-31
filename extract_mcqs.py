@@ -9,7 +9,7 @@ from src.operators.prep_mcqs.mcq_prep import extract_mcqs
 from src.connectors.storage import LocalStorage
 
 
-mcqs = extract_mcqs()
+mcqs = extract_mcqs("textbook_input/ATPL Ground Training Series - Book 8 Human Performance and Limitations MCQ CORRECTED.docx", "textbook_input/number_letter_mapping.csv")
 mcqs_as_dicts: list[dict] = []
 for mcq in mcqs:
     mcqs_as_dicts.append(asdict(mcq))
