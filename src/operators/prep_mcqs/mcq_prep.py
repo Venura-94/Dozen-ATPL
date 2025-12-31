@@ -12,7 +12,7 @@ def extract_mcqs() -> list[MCQ]:
     Returns:
         list[MCQ]: _description_
     """
-    doc_tree = get_document_tree('data/ATPL Ground Training Series - Book 8 Human Performance and Limitations MCQ CORRECTED.docx', ignore_QnA=False)
+    doc_tree = get_document_tree('textbook_input/ATPL Ground Training Series - Book 8 Human Performance and Limitations MCQ CORRECTED.docx', ignore_QnA=False)
     ch18 = doc_tree[17]
 
     # identify the "Revision Questions" part of chapter 18, which contains 293 MCQs
@@ -53,7 +53,7 @@ def extract_mcqs() -> list[MCQ]:
 
     
     # map the correct answers
-    with open('data/number_letter_mapping.csv','rt') as file: lines = file.readlines()
+    with open('textbook_input/number_letter_mapping.csv','rt') as file: lines = file.readlines()
     for i in range(0,len(lines)):
         line = lines[i]
         correct_ans_letter = line.rsplit(',')[1][0] # [0] to only get the first letter (in case of new line character or a space or something)

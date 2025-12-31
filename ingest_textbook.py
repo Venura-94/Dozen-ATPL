@@ -14,7 +14,7 @@ from src.connectors.vectorstore import ChromaLocal
 
 
 FILENAME = "ATPL Ground Training Series - Book 8 Human Performance and Limitations MCQ CORRECTED.docx"
-FILEPATH = os.path.join("data", FILENAME)
+FILEPATH = os.path.join("textbook_input", FILENAME)
 BOOK_NAME = "book8"
 
 
