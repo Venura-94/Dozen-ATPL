@@ -36,7 +36,7 @@ class LocalStorage:
         """Upload a file to the storage system.
 
         Args:
-            filepath (str): Filepath. Use alphanumeric characters and hyphens ('-') only, in case of use with cloud storage systems like Azure storage.
+            filepath (str): Filepath to save the file. Use alphanumeric characters and hyphens ('-') only, in case of use with cloud storage systems like Azure storage.
             file_contents (bytes): _description_
             can_overwrite (bool, optional): _description_. Defaults to True.
 
